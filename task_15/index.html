@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>IFE JavaScript Task 01</title>
+</head>
+
+<body>
+
+	<ul id="source">
+		<li>北京空气质量：<b>90</b></li>
+		<li>上海空气质量：<b>70</b></li>
+		<li>天津空气质量：<b>80</b></li>
+		<li>广州空气质量：<b>50</b></li>
+		<li>深圳空气质量：<b>40</b></li>
+		<li>福州空气质量：<b>32</b></li>
+		<li>成都空气质量：<b>90</b></li>
+	</ul>
+
+	<ul id="resort">
+		<!--
+		<li>第一名：北京空气质量：<b>90</b></li>
+		<li>第二名：北京空气质量：<b>90</b></li>
+		<li>第三名：北京空气质量：<b>90</b></li>
+		 -->
+
+	</ul>
+
+	<button id="sort-btn">排序</button>
+
+	<script type="text/javascript">
+		/**
+		 * getData方法
+		 * 读取id为source的列表，获取其中城市名字及城市对应的空气质量
+		 * 返回一个数组，格式见函数中示例
+		 */
+		function getData() {
+			var
+				// 获取source列表
+				source = document.getElementById("source"),
+				// 获取source中的li元素
+				li = source.getElementsByTagName("li"),
+				// 数据
+				data = [],
+				// 循环计数器
+				i;
+
+			// 循环li数组
+			for (i = 0; i < li.length; i++) {
+				var
+					// 获取第一个文本节点
+					firstNode = li[i].childNodes[0],
+					// 获取文本节点中的城市名称
+					city = firstNode.nodeValue.replace("空气质量：", ""),
+					// 获取li中的第一个b元素
+					b = li[i].getElementsByTagName("b")[0],
+					// 获取b元素的文本内容作为分数
+					score = b.innerHTML;
+
+				// 将城市名与分数插入data数组中
+				data.push([city, Number(score)]);
+			}
+
+			/*
+			data = [
+			  ["北京", 90],
+			  ["北京", 90]
+			  ……
+			]
+			*/
+
+			return data;
+
+		}
+
+		/**
+		 * sortAqiData
+		 * 按空气质量对data进行从小到大的排序
+		 * 返回一个排序后的数组
+		 */
+		function sortAqiData(data) {
+			// 对data数组进行排序
+			data_ = data.sort(function (a, b) {
+				// 对每个元素的第[1]项进行比较, 将较小数放在前面
+				return a[1] - b[1];
+			})
+			return data_;
+		}
+
+		/**
+		 * num2zh
+		 * 数字转中文
+		 * 传入一个整数，返回对应的中文数字字符串
+		 */
+		function num2zh(num) {
+			var numList = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九"],
+				unitList = ["", "十", "百", "千", "万"],
+				str = "", z = 0, i = 0;
+			while (num > 1e5) {
+				str += unitList[4];
+				num = Math.floor(num / 1e4);
+			}
+			while (num) {
+				var n = num % 10;
+				if (z || n) {
+					if (n) {
+						str = unitList[i] + str;
+					}
+					str = numList[n] + str;
+				}
+				i++;
+				num = Math.floor(num / 10);
+				z = n;
+			}
+			str = str.replace(/^一十/, "十");
+			return str;
+		}
+
+		/**
+		 * formatStr
+		 * 文本格式化
+		 * 用args中的文本替换字符串中的"%s"
+		 */
+		function formatStr(str, args) {
+			for (var i = 1; i < arguments.length; i++) {
+				str = str.replace("%s", arguments[i]);
+			}
+			return str;
+		}
+
+
+		/**
+		 * render
+		 * 将排好序的城市及空气质量指数，输出显示到id位resort的列表中
+		 * 格式见ul中的注释的部分
+		 */
+		function render(data) {
+			var
+				// 创建一个DOM片段
+				frag = document.createDocumentFragment(),
+				// 获取data长度
+				l = data.length,
+				// 计数器变量
+				i;
+
+			// 倒序循环data数组
+			for (i = data.length; i--;) {
+				var
+					// 创建一个li元素
+					li = document.createElement("li"),
+					// 获取排名
+					rank = num2zh(data.length - i),
+					// 获取城市名称
+					city = data[i][0],
+					// 获取空气质量得分
+					score = data[i][1];
+
+				// 填充li的文本内容
+				li.innerHTML = formatStr("第%s名：%s空气质量：<b>%s</b>", rank, city, score);
+
+				// 将li元素放入DOM片段中缓存
+				frag.appendChild(li);
+			}
+
+			// 清空resort中的内容
+			resort.innerHTML = "";
+			// 将DOM片段加载到页面中
+			resort.appendChild(frag);
+		}
+
+		function btnHandle() {
+			var aqiData = getData();
+			aqiData = sortAqiData(aqiData);
+			render(aqiData);
+		}
+
+
+		function init() {
+			var sortBtn = document.getElementById("sort-btn");
+
+			// 在这下面给sort-btn绑定一个点击事件，点击时触发btnHandle函数
+			sortBtn.onclick = btnHandle;
+		}
+
+		init();
+	</script>
+</body>
+
+</html>
