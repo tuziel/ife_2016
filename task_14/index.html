@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>IFE JavaScript Task 01</title>
+</head>
+
+<body>
+
+	<h3>污染城市列表</h3>
+	<ul id="aqi-list">
+		<!--
+		<li>第一名：福州（样例），10</li>
+		<li>第二名：福州（样例），10</li> -->
+	</ul>
+
+	<script type="text/javascript">
+		var aqiData = [
+			["北京", 90],
+			["上海", 50],
+			["福州", 10],
+			["广州", 50],
+			["成都", 90],
+			["西安", 100]
+		];
+
+		(function () {
+			/*
+			在注释下方编写代码
+			遍历读取aqiData中各个城市的数据
+			将空气质量指数大于60的城市显示到aqi-list的列表中
+			*/
+
+			var
+				// 获取列表aqi-list
+				aqiList = document.getElementById("aqi-list"),
+				// 创建一个DOM片段
+				frag = document.createDocumentFragment(),
+				// 计数器变量
+				i;
+
+			// 文本替换
+			function formatStr(str, args) {
+				// 用args中的文本替换字符串中的"%s"
+
+				var i;
+				for (i = 1; i < arguments.length; i++) {
+					str = str.replace("%s", arguments[i]);
+				}
+				return str;
+			}
+
+			// 数字转中文
+			function num2zh(num) {
+				// 传入一个整数，返回对应的中文数字字符串
+
+				var
+					// 单个数字对应表
+					numList = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九"],
+					// 下数单位（十进）对应表
+					unitList = ["", "十", "百", "千", "万"],
+					// 返回的中文
+					str = "",
+					// 记录上一位，用于判断是否为0
+					z = 0,
+					// 指向第i位
+					i = 0;
+
+				// 每四位取一次整
+				while (num > 1e5) {
+					// 取整进四位
+					str += unitList[4];
+					// 向下取整忽略小数
+					num = Math.floor(num / 1e4);
+				}
+				// 处理最左几位
+				while (num) {
+					// 取当前位
+					var n = num % 10;
+					// 当前位或上一位不为0
+					if (z || n) {
+						// 当前位不为0
+						if (n) {
+							// 从左边插入单位
+							str = unitList[i] + str;
+						}
+						// 从左边插入数字
+						str = numList[n] + str;
+					}
+					// 进一位
+					i++;
+					// 向下取整忽略小数
+					num = Math.floor(num / 10);
+					// 记录当前位
+					z = n;
+				}
+				// 去掉开头"一十"的"一"
+				str = str.replace(/^一十/, "十");
+				// 返回中文字符串
+				return str;
+			}
+
+			// 对aqiData数组进行排序
+			aqiData.sort(function (a, b) {
+				// 对每个元素的第[1]项进行比较, 将较大数放在前面
+				return b[1] - a[1];
+			})
+
+			// 循环aqiData数组
+			for (i = 0; i < aqiData.length; i++) {
+				// 排除60分以下的数据
+				if (aqiData[i][1] < 60) {
+					continue;
+				};
+
+				var
+					// 创建一个li元素
+					li = document.createElement("li"),
+					// 获取排名
+					rank = num2zh(i + 1),
+					// 获取城市名称
+					city = aqiData[i][0],
+					// 获取空气质量得分
+					score = aqiData[i][1];
+
+				// 填充li的文本内容
+				li.innerHTML = formatStr("第%s名：%s，%s", rank, city, score);
+
+				// 将li元素放入DOM片段中缓存
+				frag.appendChild(li);
+			}
+
+			// 将DOM片段加载到页面中
+			aqiList.appendChild(frag);
+
+		})();
+	</script>
+</body>
+
+</html>
