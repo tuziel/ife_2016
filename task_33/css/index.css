@@ -1,0 +1,62 @@
+﻿.container {
+	position:relative;
+}
+.background > tbody {
+	position:absolute;
+	top:0;
+	left:0;
+}
+.background td{
+	width:50px;
+	height:50px;
+	border-right:1px solid #aaa;
+	border-bottom:1px solid #aaa;
+	font-size:20px;
+	font-weight:bold;
+	text-align:center;
+}
+.background td:first-child {
+	border-right:2px solid #333;
+	border-bottom:0;
+}
+.background td:last-child {
+	border-right:2px solid #333;
+}
+.background tr:first-child td {
+	border-right:0;
+	border-bottom:2px solid #333;
+}
+.background tr:last-child td {
+	border-bottom:2px solid #333;
+}
+.background tr:first-child td:first-child {
+	border-bottom:0;
+}
+.background tr:last-child td:first-child {
+	border-bottom:0;
+}
+.square {
+	position:absolute;
+	top:300px;
+	left:300px;
+	width:50px;
+	height:50px;
+	background-color:#f00;
+	transition:0.3s;
+	-webkit-transition:0.3s;
+}
+.square-face {
+	position:absolute;
+	top:0;
+	left:0;
+	width:50px;
+	height:15px;
+	background-color:#00f;
+}
+.control {
+	margin-top:15px;
+	margin-left:45px;
+}
+.control input {
+	margin:5px;
+}
