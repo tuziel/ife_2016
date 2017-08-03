@@ -1,0 +1,41 @@
+/* 初始化 */
+*, *:before, *:after {
+	-webkit-box-sizing:inherit;
+	-moz-box-sizing:inherit;
+	box-sizing:inherit;
+}
+html {
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	box-sizing:border-box;
+	-webkit-tap-highlight-color:rgba(0,0,0,0);
+	-webkit-text-size-adjust:100%;
+	-ms-text-size-adjust:100%;
+	font-size:100px;
+	line-height: 1.5;
+}
+body {
+	font-family:"Helvetica Neue",Helvetica,"Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+	color:#333;
+	font-size:14px;
+}
+
+/*  页面样式  */
+.aqi-chart-wrap {
+	height: 500px;
+	margin-top: 20px;
+	white-space: nowrap;
+}
+.aqi-chart-wrap > span {
+	display: inline-block;
+	margin-right: 1px;
+	vertical-align: bottom;
+}
+
+/* 可能存在兼容性问题 */
+.aqi-chart-wrap {
+	transform: rotateX(180deg);
+}
+.aqi-chart-wrap > span {
+	vertical-align: top;
+}
