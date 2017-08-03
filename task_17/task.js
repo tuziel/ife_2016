@@ -62,6 +62,7 @@ function renderChart() {
 		proportion,	// 当前降雨量占比
 		i;
 
+	console.log(chartData);
 	// 计算宽度
 	width = pageState.nowGraTime === "month" ? "100px" :
 		pageState.nowGraTime === "week" ? "40px" :
@@ -73,7 +74,7 @@ function renderChart() {
 		proportion = chartData[i] / 500;
 		proportion > 1 && (proportion = 1);
 
-		// 创建矩形元素并添加样式
+		// 创建矩形元素并添加样式与title信息
 		dataElm = document.createElement("span");
 		dataElm.style.width = width;
 		dataElm.style.height = 500 * proportion + "px";
@@ -82,6 +83,7 @@ function renderChart() {
 			(proportion <= 0.5 ? 191 : Math.floor(191 - 127 * proportion)) + "," +
 			(proportion >= 0.5 ? 191 : Math.floor(191 - 127 * proportion)) +
 			")";
+		dataElm.title = "日期: " + i + "\n降雨量: " + chartData[i];
 
 		// 插入DOM片段中缓存
 		frag.appendChild(dataElm);
@@ -184,6 +186,8 @@ function initAqiChartData() {
 		count = 0,
 		// 当前周期开始时间
 		startTime = "",
+		// 当前周期结束时间
+		endTime = "",
 		i;
 
 	// 将原始的源数据处理成图表需要的数据格式
@@ -198,7 +202,7 @@ function initAqiChartData() {
 			// 如果到达下一个周期
 			else if (new Date(i).getDate() === 1) {
 				// 结算上一周期的数据
-				chartData[startTime] = total / count;
+				chartData[startTime + (endTime !== startTime ? " - " + endTime : "")] = total / count;
 				// 重置周期参数
 				total = count = 0;
 				// 重新开始计算周期
@@ -207,21 +211,23 @@ function initAqiChartData() {
 			// 累计数据
 			total += data[i];
 			count++;
+			endTime = i;
 		}
-		chartData[startTime] = total / count;
+		chartData[startTime + (endTime !== startTime ? " - " + endTime : "")] = total / count;
 	} else if (time === "week") {
 		for (i in data) {
 			if (!startTime) {
 				startTime = i;
 			} else if (new Date(i).getDay() === 0) {
-				chartData[startTime] = total / count;
+				chartData[startTime + (endTime !== startTime ? " - " + endTime : "")] = total / count;
 				total = count = 0;
 				startTime = i;
 			}
 			total += data[i];
 			count++;
+			endTime = i;
 		}
-		chartData[startTime] = total / count;
+		chartData[startTime + (endTime !== startTime ? " - " + endTime : "")] = total / count;
 	} else {
 		for (i in data) {
 			chartData[i] = data[i];
