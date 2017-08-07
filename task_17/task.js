@@ -62,7 +62,6 @@ function renderChart() {
 		proportion,	// 当前降雨量占比
 		i;
 
-	console.log(chartData);
 	// 计算宽度
 	width = pageState.nowGraTime === "month" ? "100px" :
 		pageState.nowGraTime === "week" ? "40px" :
