@@ -1,0 +1,43 @@
+/* 初始化 */
+*, *:before, *:after {
+	-webkit-box-sizing:inherit;
+	-moz-box-sizing:inherit;
+	box-sizing:inherit;
+}
+html {
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	box-sizing:border-box;
+	-webkit-tap-highlight-color:rgba(0,0,0,0);
+	-webkit-text-size-adjust:100%;
+	-ms-text-size-adjust:100%;
+	font-size:100px;
+	line-height: 1.5;
+}
+body {
+	margin: 20px;
+	color:#333;
+	font-family:"Helvetica Neue",Helvetica,"Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+	font-size:14px;
+}
+
+/*  页面样式  */
+.control-bar input {
+	margin-right: 20px;
+	font-size: 14px;
+	line-height: 24px;
+}
+#list {
+	margin-top: 20px;
+}
+#list > span {
+	display: inline-block;
+	margin: 0 5px 5px 0;
+	padding: 5px 15px;
+	border: 1px solid #000;
+	cursor: pointer;
+	font-size: 20px;
+}
+#list > span:hover {
+	background-color: #eee;
+}
