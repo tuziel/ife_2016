@@ -172,7 +172,6 @@ var list = (function (data, elm) {
 				for (inner = 0; inner < outer; inner++) {
 					if (data[inner] > data[inner + 1]) {
 						swap(inner, inner + 1);
-						stepList.push({ compare: [inner, inner + 1], data: copyData() });
 					}
 					stepList.push({ compare: [inner, inner + 1], data: copyData() });
 				}
@@ -195,13 +194,13 @@ var list = (function (data, elm) {
 			for (outer = 0; outer < length - 1; outer++) {
 				min = outer;
 				for (inner = outer + 1; inner < length; inner++) {
+					stepList.push({ compare: [inner, min, outer], data: copyData() });
 					if (data[inner] < data[min]) {
 						min = inner;
 					}
-					stepList.push({ compare: [inner, min], data: copyData() });
 				}
 				swap(outer, min);
-				stepList.push({ compare: [inner, min], data: copyData() });
+				stepList.push({ compare: [outer, min], data: copyData() });
 			}
 
 			this.render();
@@ -223,7 +222,7 @@ var list = (function (data, elm) {
 				inner = outer;
 				while (inner > 0 && data[inner - 1] >= temp) {
 					data[inner] = data[inner - 1];
-					stepList.push({ compare: [inner, inner - 1], data: copyData() });
+					stepList.push({ compare: [inner, inner - 1, outer], data: copyData() });
 					inner--;
 				}
 				data[inner] = temp;
@@ -232,6 +231,13 @@ var list = (function (data, elm) {
 
 			this.render();
 			return stepList;
+		},
+
+		/**
+		 * 希尔排序
+		 */
+		shellSort: function () {
+
 		}
 	}
 })(
@@ -249,7 +255,7 @@ var dom = document.getElementById("list"),
 	btnSelectSort = document.getElementById("list-select-sort"),
 	btnInsertSort = document.getElementById("list-insert-sort"),
 	timer = null,	// 定时器
-	delay = 0,	// 定时器间隔
+	delay = 20,	// 定时器间隔
 	stepList;	// 步骤记录表
 
 
@@ -285,7 +291,6 @@ function renderChart(step) {
 	//插入页面
 	chart.innerHTML = "";
 	chart.appendChild(frag);
-	console.log(compare);
 	for (i = 0; i < compare.length; i++) {
 		chart.children[compare[i]].className = "act";
 	}
