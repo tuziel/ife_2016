@@ -35,10 +35,11 @@ var list = (function (data, elm) {
 	 * @param {number} a
 	 * @param {number} b
 	 */
-	function swap(a, b) {
-		var temp = data[a];
-		data[a] = data[b];
-		data[b] = temp;
+	function swap(a, b, arr) {
+		arr = arr || data;
+		var temp = arr[a];
+		arr[a] = arr[b];
+		arr[b] = temp;
 		// console.log(data);
 	};
 
@@ -237,11 +238,69 @@ var list = (function (data, elm) {
 		 * 希尔排序
 		 */
 		shellSort: function () {
+			var length = data.length,
+				stepList = [{ compare: [], data: copyData() }],
+				gap = 1,
+				outer,
+				inner;
 
+			while (gap < length / 3) {
+				gap = 3 * gap + 1;
+			}
+			while (gap >= 1) {
+				for (outer = gap; outer < length; outer++) {
+					for (inner = outer; inner >= gap && data[inner] < data[inner - gap]; inner -= gap) {
+						swap(inner, inner - gap);
+						stepList.push({ compare: [inner, inner - gap, outer], data: copyData() });
+					}
+				}
+				gap = (gap - 1) / 3;
+			}
+
+			this.render();
+			return stepList;
+		},
+
+		/**
+		 * 快速排序
+		 */
+		qSort: function () {
+			var length = data.length,
+				stepList = [{ compare: [], data: copyData() }];
+
+			qSort_(0, length - 1);
+
+			function qSort_(p, r) {
+				var q;
+				if (p < r) {
+					q = partition(p, r);
+					qSort_(p, q - 1);
+					qSort_(q + 1, r);
+				}
+			}
+
+			function partition(p, r) {
+				var i = p,
+					j = r + 1,
+					x = data[p];
+				while (true) {
+					while (data[++i] < x && i < r);
+					while (data[--j] > x);
+					if (i >= j) break;
+					swap(i, j);
+					stepList.push({ compare: [i, j, p], data: copyData() });
+				}
+				swap(p, j);
+				stepList.push({ compare: [i, j, p], data: copyData() });
+				return j;
+			}
+
+			this.render();
+			return stepList;
 		}
 	}
 })(
-	randomList(50),
+	randomList(600),
 	document.getElementById("list")
 	);
 
@@ -254,6 +313,8 @@ var dom = document.getElementById("list"),
 	btnBubbleSort = document.getElementById("list-bubble-sort"),
 	btnSelectSort = document.getElementById("list-select-sort"),
 	btnInsertSort = document.getElementById("list-insert-sort"),
+	btnShellSort = document.getElementById("list-shell-sort"),
+	btnQSort = document.getElementById("list-q-sort"),
 	timer = null,	// 定时器
 	delay = 20,	// 定时器间隔
 	stepList;	// 步骤记录表
@@ -397,6 +458,14 @@ btnSelectSort.onclick = function () {
 }
 btnInsertSort.onclick = function () {
 	stepList = list.insertSort();
+	renderStepList(delay);
+}
+btnShellSort.onclick = function () {
+	stepList = list.shellSort();
+	renderStepList(delay);
+}
+btnQSort.onclick = function () {
+	stepList = list.qSort();
 	renderStepList(delay);
 }
 
