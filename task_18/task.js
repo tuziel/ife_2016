@@ -17,7 +17,6 @@ var list = (function (data, elm) {
 			var item = document.createElement("span");
 			item.innerHTML = val;
 			elm.appendChild(item);
-			console.log(data);
 			return data.push(val);
 		},
 
@@ -28,7 +27,6 @@ var list = (function (data, elm) {
 		pop: function () {
 			var lastItem = elm.lastElementChild;
 			lastItem && elm.removeChild(lastItem);
-			console.log(data);
 			return data.pop();
 		},
 
@@ -42,7 +40,6 @@ var list = (function (data, elm) {
 				firstItem = elm.firstElementChild;
 			item.innerHTML = val;
 			elm.insertBefore(item, firstItem);
-			console.log(data);
 			return data.unshift(val);
 		},
 
@@ -53,7 +50,6 @@ var list = (function (data, elm) {
 		shift: function () {
 			var firstItem = elm.firstElementChild;
 			firstItem && elm.removeChild(firstItem);
-			console.log(data);
 			return data.shift();
 		},
 
@@ -62,7 +58,7 @@ var list = (function (data, elm) {
 		 * 返回删除的元素
 		 * @param {number} index
 		 */
-		remove(index) {
+		remove: function (index) {
 			var item = elm.children[index];
 			elm.removeChild(item);
 			return data.splice(index, 1);
