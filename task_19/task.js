@@ -39,7 +39,7 @@ var list = (function (data, elm) {
 		var temp = data[a];
 		data[a] = data[b];
 		data[b] = temp;
-		console.log(data);
+		// console.log(data);
 	};
 
 	return {
@@ -118,21 +118,21 @@ var list = (function (data, elm) {
 		},
 
 		/**
-		 * 获取列表数据
+		 * 获取队列数据
 		 */
 		getData: function () {
 			return copyData();
 		},
 
 		/**
-		 * 获取列表长度
+		 * 获取队列长度
 		 */
 		length: function () {
 			return data.length;
 		},
 
 		/**
-		 * 获取列表最大值
+		 * 获取队列最大值
 		 */
 		getMax: function () {
 			return data.reduce(function (a, b) {
@@ -141,7 +141,7 @@ var list = (function (data, elm) {
 		},
 
 		/**
-		 * 获取列表最小值
+		 * 获取队列最小值
 		 */
 		getMin: function () {
 			return data.reduce(function (a, b) {
@@ -150,11 +150,21 @@ var list = (function (data, elm) {
 		},
 
 		/**
+		 * 反转队列
+		 */
+		reverse: function () {
+			data.reverse();
+			this.render();
+
+			return copyData();
+		},
+
+		/**
 		 * 冒泡排序
 		 */
 		bubbleSort: function () {
 			var length = data.length,
-				stepList = [copyData()],
+				stepList = [{ compare: [], data: copyData() }],
 				outer,
 				inner;
 
@@ -162,9 +172,62 @@ var list = (function (data, elm) {
 				for (inner = 0; inner < outer; inner++) {
 					if (data[inner] > data[inner + 1]) {
 						swap(inner, inner + 1);
-						stepList.push(copyData());
+						stepList.push({ compare: [inner, inner + 1], data: copyData() });
 					}
+					stepList.push({ compare: [inner, inner + 1], data: copyData() });
 				}
+			}
+
+			this.render();
+			return stepList;
+		},
+
+		/**
+		 * 选择排序
+		 */
+		selectSort: function () {
+			var length = data.length,
+				stepList = [{ compare: [], data: copyData() }],
+				outer,
+				inner,
+				min;
+
+			for (outer = 0; outer < length - 1; outer++) {
+				min = outer;
+				for (inner = outer + 1; inner < length; inner++) {
+					if (data[inner] < data[min]) {
+						min = inner;
+					}
+					stepList.push({ compare: [inner, min], data: copyData() });
+				}
+				swap(outer, min);
+				stepList.push({ compare: [inner, min], data: copyData() });
+			}
+
+			this.render();
+			return stepList;
+		},
+
+		/**
+		 * 插入排序
+		 */
+		insertSort: function () {
+			var length = data.length,
+				stepList = [{ compare: [], data: copyData() }],
+				outer,
+				inner,
+				temp;
+
+			for (outer = 1; outer < length; outer++) {
+				temp = data[outer];
+				inner = outer;
+				while (inner > 0 && data[inner - 1] >= temp) {
+					data[inner] = data[inner - 1];
+					stepList.push({ compare: [inner, inner - 1], data: copyData() });
+					inner--;
+				}
+				data[inner] = temp;
+				stepList.push({ compare: [inner, outer], data: copyData() });
 			}
 
 			this.render();
@@ -180,34 +243,40 @@ var dom = document.getElementById("list"),
 	btnPush = document.getElementById("list-push"),
 	btnPop = document.getElementById("list-pop"),
 	btnUnshift = document.getElementById("list-unshift"),
+	btnReverse = document.getElementById("list-reverse"),
 	btnShift = document.getElementById("list-shift"),
 	btnBubbleSort = document.getElementById("list-bubble-sort"),
+	btnSelectSort = document.getElementById("list-select-sort"),
+	btnInsertSort = document.getElementById("list-insert-sort"),
 	timer = null,	// 定时器
+	delay = 0,	// 定时器间隔
 	stepList;	// 步骤记录表
 
 
 /**
  * 渲染图表
  */
-function renderChart(arr) {
+function renderChart(step) {
 	var chart = document.getElementById("chart-wrap"),
 		frag = document.createDocumentFragment(),
+		compare = step.compare,
+		data_ = step.data,
 		max = list.getMax(),	// 最大值
 		dataElm,	// 矩形元素
 		proportion,	// 当前数值与最大值占比
 		i;
 
 	// 构造矩形
-	for (i = 0; i < arr.length; i++) {
+	for (i = 0; i < data_.length; i++) {
 		// 当前数值与最大值占比
-		proportion = arr[i] / max;
+		proportion = data_[i] / max;
 		proportion > 1 && (proportion = 1);
 
 		// 创建矩形元素
 		dataElm = document.createElement("span");
 		dataElm.style.height = 500 * proportion + "px";
 		dataElm.style.height = 500 * proportion + "px";
-		dataElm.title = arr[i];
+		dataElm.title = data_[i];
 
 		// 插入DOM片段中缓存
 		frag.appendChild(dataElm);
@@ -216,6 +285,10 @@ function renderChart(arr) {
 	//插入页面
 	chart.innerHTML = "";
 	chart.appendChild(frag);
+	console.log(compare);
+	for (i = 0; i < compare.length; i++) {
+		chart.children[compare[i]].className = "act";
+	}
 }
 
 /**
@@ -231,6 +304,14 @@ function renderStepList(delay) {
 			clearInterval(timer);
 		}
 	}, delay);
+}
+
+/**
+ * 结束动画
+ */
+function ending() {
+	clearInterval(timer);
+	renderChart({ compare: [], data: list.getData() });
 }
 
 /**
@@ -261,7 +342,7 @@ function getInputVal() {
 }
 
 /**
- * 列表元素的点击事件
+ * 队列元素的点击事件
  */
 dom.onclick = function (ev) {
 	var item = ev.target,
@@ -270,6 +351,7 @@ dom.onclick = function (ev) {
 	if (item.nodeName.toLocaleLowerCase() === "span") {
 		index = [].indexOf.call(dom.children, ev.target);
 		list.remove(index);
+		ending();
 	}
 }
 
@@ -279,23 +361,40 @@ dom.onclick = function (ev) {
 btnPush.onclick = function () {
 	var val = getInputVal();
 	val && list.push(val);
+	ending();
 }
 btnPop.onclick = function () {
 	var val = list.pop();
 	alert(val ? val : "队列为空");
+	ending();
 }
 btnUnshift.onclick = function () {
 	var val = getInputVal();
 	val && list.unshift(val);
+	ending();
 }
 btnShift.onclick = function () {
 	var val = list.shift();
 	alert(val ? val : "队列为空");
+	ending();
+}
+btnReverse.onclick = function () {
+	list.reverse();
+	ending();
 }
 btnBubbleSort.onclick = function () {
 	stepList = list.bubbleSort();
-	renderStepList(0);
+	renderStepList(delay);
+}
+btnSelectSort.onclick = function () {
+	stepList = list.selectSort();
+	renderStepList(delay);
+}
+btnInsertSort.onclick = function () {
+	stepList = list.insertSort();
+	renderStepList(delay);
 }
 
 // 渲染页面
 list.render();
+ending();

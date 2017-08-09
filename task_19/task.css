@@ -23,7 +23,7 @@ body {
 
 /*  页面样式  */
 .control-bar input {
-	margin-right: 20px;
+	margin: 0 20px 10px 0;
 	font-size: 14px;
 	line-height: 24px;
 }
@@ -53,6 +53,9 @@ body {
 	margin-right: 1px;
 	background-color: #3cc;
 	vertical-align: bottom;
+}
+#chart-wrap > span.act {
+	background-color: #c3c;
 }
 #chart-wrap > span:hover {
 	box-shadow: 0 0 5px rgb(0,0,0);
