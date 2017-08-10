@@ -15,7 +15,7 @@ var list = (function (data, elm) {
 		 */
 		push: function (val) {
 			var item = document.createElement("span");
-			item.innerHTML = val;
+			item.innerText = val;
 			elm.appendChild(item);
 			return data.push(val);
 		},
@@ -38,7 +38,7 @@ var list = (function (data, elm) {
 		unshift: function (val) {
 			var item = document.createElement("span"),
 				firstItem = elm.firstElementChild;
-			item.innerHTML = val;
+			item.innerText = val;
 			elm.insertBefore(item, firstItem);
 			return data.unshift(val);
 		},
