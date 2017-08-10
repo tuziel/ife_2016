@@ -87,10 +87,14 @@ var list = (function (data, elm) {
 				return false;
 			}
 
-			var arr = [];
-			arr = text.split(/[\r\n,，、\s]+/);
-			!arr[arr.length - 1] && arr.pop();
-			return arr;
+			var strList = [],
+				index;
+			strList = text.split(/[\r\n,，、\s]+/);
+			for (var index = 0; index < strList.length; index++) {
+				!strList[index] && strList.splice(index, 1);
+			}
+			console.log(strList);
+			return strList;
 		},
 
 		search: function (str) {
