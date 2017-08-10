@@ -249,6 +249,7 @@ var list = (function (data, elm) {
 			}
 			while (gap >= 1) {
 				for (outer = gap; outer < length; outer++) {
+					stepList.push({ compare: [outer, outer - gap], data: copyData() });
 					for (inner = outer; inner >= gap && data[inner] < data[inner - gap]; inner -= gap) {
 						swap(inner, inner - gap);
 						stepList.push({ compare: [inner, inner - gap, outer], data: copyData() });
@@ -299,7 +300,6 @@ var list = (function (data, elm) {
 					right = [],
 					i, j, k;
 
-				j = stepList.length;
 				k = startL;
 				for (i = 0; i < endL - startL; i++) {
 					left[i] = data[k++];
@@ -308,7 +308,7 @@ var list = (function (data, elm) {
 				k = startR;
 				for (i = 0; i < endR - startR; i++) {
 					right[i] = data[k++];
-					stepList[j++].compare.push(k);
+					stepList.push({ compare: [k, startL, endL - 1, endR - 1], data: copyData() });
 				}
 				left[left.length] = Infinity;
 				right[right.length] = Infinity;
@@ -350,6 +350,7 @@ var list = (function (data, elm) {
 				var left = start,
 					right = end + 1,
 					pivot = data[start];
+
 				while (true) {
 					while (data[++left] < pivot && left < right) {
 						stepList.push({ compare: [left, right, start, end], data: copyData() });
@@ -359,6 +360,7 @@ var list = (function (data, elm) {
 					};
 					if (left >= right) break;
 					swap(left, right);
+					stepList.push({ compare: [left, right, start, end], data: copyData() });
 				}
 				swap(start, right);
 				stepList.push({ compare: [left, right, start, end], data: copyData() });
