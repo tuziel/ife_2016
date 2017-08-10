@@ -1,7 +1,7 @@
-# 任务十八：基础JavaScript练习（三）
+# 任务二十：基础JavaScript练习（三）
 
 ## 任务地址
-[http://ife.baidu.com/2016/task/detail?taskId=18](http://ife.baidu.com/2016/task/detail?taskId=18)
+[http://ife.baidu.com/2016/task/detail?taskId=20](http://ife.baidu.com/2016/task/detail?taskId=20)
 
 ## 任务目的
 * 实践JavaScript数组、字符串相关操作
