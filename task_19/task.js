@@ -136,6 +136,9 @@ var list = (function (data, elm) {
 		 * 获取队列最大值
 		 */
 		getMax: function () {
+			if (data.length === 0) {
+				return false;
+			}
 			return data.reduce(function (a, b) {
 				return Math.max(a, b);
 			})
@@ -145,6 +148,9 @@ var list = (function (data, elm) {
 		 * 获取队列最小值
 		 */
 		getMin: function () {
+			if (data.length === 0) {
+				return false;
+			}
 			return data.reduce(function (a, b) {
 				return Math.min(a, b);
 			})
@@ -405,6 +411,11 @@ function renderChart(step) {
 		dataElm,	// 矩形元素
 		proportion,	// 当前数值与最大值占比
 		i;
+
+	if (data_.length === 0) {
+		chart.innerHTML = "";
+		return false;
+	}
 
 	// 构造矩形
 	for (i = 0; i < data_.length; i++) {
