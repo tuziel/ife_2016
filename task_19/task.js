@@ -262,37 +262,107 @@ var list = (function (data, elm) {
 		},
 
 		/**
-		 * 快速排序
+		 * 归并排序
 		 */
-		qSort: function () {
+		mergeSort: function () {
 			var length = data.length,
 				stepList = [{ compare: [], data: copyData() }];
 
-			qSort_(0, length - 1);
+			mSort();
 
-			function qSort_(p, r) {
-				var q;
-				if (p < r) {
-					q = partition(p, r);
-					qSort_(p, q - 1);
-					qSort_(q + 1, r);
+			function mSort() {
+				if (length < 2) {
+					return;
+				}
+
+				var step = 1,
+					left,
+					right;
+
+				while (step < length) {
+					left = 0;
+					right = step;
+					while (right + step <= length) {
+						merge(left, left + step, right, right + step);
+						left = right + step;
+						right = left + step;
+					}
+					if (right < length) {
+						merge(left, left + step, right, length);
+					}
+					step *= 2;
 				}
 			}
 
-			function partition(p, r) {
-				var i = p,
-					j = r + 1,
-					x = data[p];
-				while (true) {
-					while (data[++i] < x && i < r);
-					while (data[--j] > x);
-					if (i >= j) break;
-					swap(i, j);
-					stepList.push({ compare: [i, j, p], data: copyData() });
+			function merge(startL, endL, startR, endR) {
+				var left = [],
+					right = [],
+					i, j, k;
+
+				j = stepList.length;
+				k = startL;
+				for (i = 0; i < endL - startL; i++) {
+					left[i] = data[k++];
+					stepList.push({ compare: [k, startL, endL - 1, endR - 1], data: copyData() });
 				}
-				swap(p, j);
-				stepList.push({ compare: [i, j, p], data: copyData() });
-				return j;
+				k = startR;
+				for (i = 0; i < endR - startR; i++) {
+					right[i] = data[k++];
+					stepList[j++].compare.push(k);
+				}
+				left[left.length] = Infinity;
+				right[right.length] = Infinity;
+
+				i = j = 0;
+				for (k = startL; k < endR; k++) {
+					if (left[i] < right[j]) {
+						data[k] = left[i++];
+					} else {
+						data[k] = right[j++];
+					}
+				}
+				stepList.push({ compare: [startL, endR - 1], data: copyData() });
+			}
+
+			this.render();
+			return stepList;
+		},
+
+		/**
+		 * 快速排序
+		 */
+		quickSort: function () {
+			var length = data.length,
+				stepList = [{ compare: [], data: copyData() }];
+
+			qSoft(0, length - 1);
+
+			function qSoft(start, end) {
+				var middel;
+				if (start < end) {
+					middel = partition(start, end);
+					qSoft(start, middel - 1);
+					qSoft(middel + 1, end);
+				}
+			}
+
+			function partition(start, end) {
+				var left = start,
+					right = end + 1,
+					pivot = data[start];
+				while (true) {
+					while (data[++left] < pivot && left < right) {
+						stepList.push({ compare: [left, right, start, end], data: copyData() });
+					};
+					while (data[--right] > pivot) {
+						stepList.push({ compare: [left, right, start, end], data: copyData() });
+					};
+					if (left >= right) break;
+					swap(left, right);
+				}
+				swap(start, right);
+				stepList.push({ compare: [left, right, start, end], data: copyData() });
+				return right;
 			}
 
 			this.render();
@@ -300,7 +370,7 @@ var list = (function (data, elm) {
 		}
 	}
 })(
-	randomList(600),
+	randomList(50),
 	document.getElementById("list")
 	);
 
@@ -314,9 +384,10 @@ var dom = document.getElementById("list"),
 	btnSelectSort = document.getElementById("list-select-sort"),
 	btnInsertSort = document.getElementById("list-insert-sort"),
 	btnShellSort = document.getElementById("list-shell-sort"),
-	btnQSort = document.getElementById("list-q-sort"),
+	btnMergeSort = document.getElementById("list-merge-sort"),
+	btnQuickSort = document.getElementById("list-quick-sort"),
 	timer = null,	// 定时器
-	delay = 20,	// 定时器间隔
+	delay = 30,	// 定时器间隔
 	stepList;	// 步骤记录表
 
 
@@ -464,8 +535,12 @@ btnShellSort.onclick = function () {
 	stepList = list.shellSort();
 	renderStepList(delay);
 }
-btnQSort.onclick = function () {
-	stepList = list.qSort();
+btnQuickSort.onclick = function () {
+	stepList = list.quickSort();
+	renderStepList(delay);
+}
+btnMergeSort.onclick = function () {
+	stepList = list.mergeSort();
 	renderStepList(delay);
 }
 

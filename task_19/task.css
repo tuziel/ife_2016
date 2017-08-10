@@ -52,7 +52,7 @@ body {
 }
 #chart-wrap > span {
 	display: inline-block;
-	width: 1px;
+	width: 20px;
 	margin-right: 1px;
 	background-color: #3cc;
 	vertical-align: bottom;
@@ -62,4 +62,10 @@ body {
 }
 #chart-wrap > span:hover {
 	box-shadow: 0 0 5px rgb(0,0,0);
+}
+#chart-wrap {
+	transform: rotateX(180deg);
+}
+#chart-wrap > span {
+	vertical-align: top;
 }
