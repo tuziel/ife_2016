@@ -82,6 +82,11 @@ function List(data, elm) {
 			}, this);
 		},
 
+		/**
+		 * 根据逗号空格等字符切分字符串
+		 * 返回一个字符串数组
+		 * @param {string} text 输入的字符串
+		 */
 		sliceWord: function (text) {
 			if (typeof text !== "string") {
 				return false;
@@ -91,6 +96,8 @@ function List(data, elm) {
 				index;
 
 			strList = text.split(/[\r\n,，、\s]+/);
+
+			// 去除空字符串
 			for (index = 0; index < strList.length; index++) {
 				!strList[index] && strList.splice(index, 1);
 			}
@@ -98,6 +105,11 @@ function List(data, elm) {
 			return strList;
 		},
 
+		/**
+		 * 模糊查找队列中的元素
+		 * 返回符合条件元素的索引数组
+		 * @param {string} str 输入的字符串
+		 */
 		search: function (str) {
 			var arr = [];
 			str = this.sliceWord(str);
@@ -106,23 +118,32 @@ function List(data, elm) {
 				var flag, j;
 
 				for (j = 0; j < str.length; j++) {
+					// 如果当前元素与搜索条件吻合，标识置1
 					if (("" + elm).indexOf(str[j]) > -1) {
 						flag = 1;
 					}
 				}
+				// 如果存在标识，将当前元素加入返回列表中
 				if (flag) {
 					arr.push(i);
 				}
 			})
 
-			console.log(arr);
 			return arr;
 		},
 
+		/**
+		 * 元素是否已存在
+		 * @param {string} str 输入的字符串
+		 */
 		isExist: function (str) {
 			return data.indexOf(str) > -1;
 		},
 
+		/**
+		 * 限制元素在count个以内
+		 * @param {number} count 元素数量
+		 */
 		fixed: function (count) {
 			while (data.length > count) {
 				this.shift();
@@ -202,20 +223,28 @@ inputTag.oninput = function () {
 	var val = getId("list-tag-input").value,
 		index;
 
+	// 根据逗号空格等字符切分字符串
 	if (val) {
 		val = val.split(/[\r\n,，、\s]+/);
 	}
+	// 去除空字符串，但忽略最后一个值（当前输入或空字符串）
 	for (index = 0; index < val.length - 1; index++) {
 		!val[index] && val.splice(index, 1);
 	}
+	// 将切分好的字符串插入队列中，除了最后一个值
 	for (index = 0; index < val.length - 1; index++) {
 		!listTag.isExist(val[index]) && listTag.push(val[index]);
 	}
-	getId("list-tag-input").value = val[val.length - 1] || "";
+	// 如果有字符串加入到队列，清空输入，但保留最后一个值
+	if (val.length > 1) {
+		(getId("list-tag-input").value = val[val.length - 1] || "");
+	}
 
+	// 限制队列元素在10个以内
 	listTag.fixed(10);
 }
 inputTag.onkeydown = function (ev) {
+	// 按下回车时当作输入空格处理
 	if (ev.keyCode === 13) {
 		getId("list-tag-input").value += " ";
 		inputTag.oninput();
