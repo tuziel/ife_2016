@@ -235,9 +235,9 @@ inputTag.oninput = function () {
 	for (index = 0; index < val.length - 1; index++) {
 		!listTag.isExist(val[index]) && listTag.push(val[index]);
 	}
-	// 如果有字符串加入到队列，清空输入，但保留最后一个值
-	if (val.length > 1) {
-		(getId("list-tag-input").value = val[val.length - 1] || "");
+	// 如果获取到可插入队列的字符串，清空输入，只保留最后一个值
+	if (val.length > 1 || !val[1]) {
+		getId("list-tag-input").value = val[val.length - 1];
 	}
 
 	// 限制队列元素在10个以内
