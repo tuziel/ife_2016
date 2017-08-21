@@ -157,15 +157,15 @@ function traverseDomTree(method) {
  * @param {array} queue 遍历顺序的队列
  */
 function renderDomTree(queue) {
+	// 清除背景色
 	function clearBgc() {
 		var j = queue.length;
 		while (j--) {
-			queue[j].style.backgroundColor = "";
+			queue[j].className = queue[j].className.replace(/\s*act/g, "");
 		}
 	}
 
-	var COLOR = "rgba(100,30,30,0.2)",
-		i = 0;
+	var i = 0;
 
 	// 清除旧操作
 	clearInterval(timer);
@@ -173,10 +173,10 @@ function renderDomTree(queue) {
 
 	timer = setInterval(function () {
 		var length = queue.length;
-		// 为当前节点添加背景色
 		clearBgc();
 		if (i < length) {
-			queue[i].style.backgroundColor = COLOR;
+			cName = queue[i].className;
+			queue[i].className = cName ? cName + " act" : "act";
 		} else if (i > length) {
 			clearInterval(timer);
 		}

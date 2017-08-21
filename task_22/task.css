@@ -32,7 +32,7 @@ body {
 	line-height: 0;
 	vertical-align: top;
 }
-.tree div.act {
+.tree.act, .tree div.act {
 	background-color: #0f0;
 }
 .control-bar {
