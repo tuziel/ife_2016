@@ -172,7 +172,9 @@ function renderDomTree(queue) {
 	clearBgc();
 
 	timer = setInterval(function () {
-		var length = queue.length;
+		var length = queue.length,
+			cName;
+
 		clearBgc();
 		if (i < length) {
 			cName = queue[i].className;
