@@ -1,0 +1,46 @@
+<!DOCTYPE>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>任务二十四：JavaScript和树（三）</title>
+	<link rel="stylesheet" href="task.css">
+</head>
+
+<body>
+	<div id="tree" class="tree">1
+		<div>3
+			<div>43</div>
+			<div>57</div>
+		</div>
+		<div>6</div>
+		<div>57
+			<div>83</div>
+			<div>9
+				<div>130</div>
+				<div>11
+					<div>1</div>
+					<div>12</div>
+					<div>13</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="control-bar">
+		<input type="text" id="search-input">
+		<div id="traverse-bar" class="disp-ilb">
+			<input type="button" value="深度优先">
+			<input type="button" value="广度优先">
+		</div>
+		<div class="disp-ilb">
+			<input type="button" id="remove" value="删除">
+			<input type="text" id="node-input">
+			<input type="button" id="add" value="添加">
+		</div>
+	</div>
+
+	<script src="task.js"></script>
+</body>
+
+</html>
